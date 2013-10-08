@@ -72,6 +72,9 @@ echo "Configure openssl for ${PLATFORM} ${SDKVERSION} ${ARCH}"
 sed -ie "s!^CFLAG=!CFLAG=-isysroot ${DEVELOPER}/Platforms/${PLATFORM}.platform/Developer/SDKs/${PLATFORM}${SDKVERSION}.sdk !" "Makefile"
 sed -ie "s!^CFLAG=!CFLAG=-miphoneos-version-min=${SDKVERSION} !" "Makefile"
 
+# Fix libcrypto stack alignment on i386
+sed -ie "s!^CFLAG=!CFLAG=-mstackrealign !" "Makefile"
+
 echo "Make openssl for ${PLATFORM} ${SDKVERSION} ${ARCH}"
 
 make
