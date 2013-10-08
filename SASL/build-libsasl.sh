@@ -21,8 +21,8 @@
 ###########################################################################
 #  Change values here							  #
 #									  #
-VERSION="2.1.23"							  #
-SDKVERSION="4.3"							  #
+VERSION="2.1.25"							  #
+SDKVERSION="7.0"							  #
 OPENSSL="${PWD}/../OpenSSL"						  #
 #									  #
 ###########################################################################
@@ -63,62 +63,29 @@ echo "Please stand by..."
 pushd "${CURRENTPATH}/src/cyrus-sasl-${VERSION}"
 
 CC="${DEVELOPER}/Platforms/${PLATFORM}.platform/Developer/usr/bin/gcc"
-CFLAGS="-isysroot ${DEVELOPER}/Platforms/${PLATFORM}.platform/Developer/SDKs/${PLATFORM}${SDKVERSION}.sdk -I"${OPENSSL}/include" -L"${OPENSSL}" -arch ${ARCH} -pipe -Os -gdwarf-2"
+CFLAGS="-isysroot ${DEVELOPER}/Platforms/${PLATFORM}.platform/Developer/SDKs/${PLATFORM}${SDKVERSION}.sdk -I"${OPENSSL}/include" -L"${OPENSSL}" -arch ${ARCH} -pipe -Os -gdwarf-2 -miphoneos-version-min=${SDKVERSION}"
 #LDFLAGS="-isysroot ${DEVELOPER}/Platforms/${PLATFORM}.platform/Developer/SDKs/${PLATFORM}${SDKVERSION}.sdk -arch ${ARCH}"
 mkdir -p "${CURRENTPATH}/bin/${PLATFORM}${SDKVERSION}.sdk"
 
 LOG="${CURRENTPATH}/bin/${PLATFORM}${SDKVERSION}.sdk/build-cyrus-sasl-${VERSION}.log"
 
-echo "Configure cyrus-sasl for ${PLATFORM} ${SDKVERSION} ${ARCH}"
-
-export CC="${CC}"
-export CFLAGS="${CFLAGS}"
-#export LDFLAGS="${LDFLAGS}"
-./configure -prefix=${CURRENTPATH}/bin/${PLATFORM}${SDKVERSION}.sdk --host=${ARCH}-apple-darwin --disable-shared --enable-static --with-openssl > "${LOG}" 2>&1
-
-echo "Make cyrus-sasl for ${PLATFORM} ${SDKVERSION} ${ARCH}"
-
-(cd lib && make) >> "${LOG}" 2>&1
-(cd include && make saslinclude_HEADERS="hmac-md5.h md5.h sasl.h saslplug.h saslutil.h prop.h" install) >> "${LOG}" 2>&1
-(cd include && make clean) >> "${LOG}" 2>&1
-(cd lib && make install) >> "${LOG}" 2>&1
-(cd lib && make clean) >> "${LOG}" 2>&1
-rm config.cache
-popd
-
-echo "Building cyrus-sasl for ${PLATFORM} ${SDKVERSION} ${ARCH}, finished"
-#############
-
-#############
-# iPhoneOS armv6
-ARCH="armv6"
-PLATFORM="iPhoneOS"
-echo "Building cyrus-sasl for ${PLATFORM} ${SDKVERSION} ${ARCH}"
-echo "Please stand by..."
-
-pushd "${CURRENTPATH}/src/cyrus-sasl-${VERSION}"
-
-CC="${DEVELOPER}/Platforms/${PLATFORM}.platform/Developer/usr/bin/gcc"
-CFLAGS="-isysroot ${DEVELOPER}/Platforms/${PLATFORM}.platform/Developer/SDKs/${PLATFORM}${SDKVERSION}.sdk -I"${OPENSSL}/include" -L"${OPENSSL}" -arch ${ARCH} -pipe -Os -gdwarf-2"
-#LDFLAGS="-isysroot ${DEVELOPER}/Platforms/${PLATFORM}.platform/Developer/SDKs/${PLATFORM}${SDKVERSION}.sdk -arch ${ARCH}"
-mkdir -p "${CURRENTPATH}/bin/${PLATFORM}${SDKVERSION}-${ARCH}.sdk"
-
-LOG="${CURRENTPATH}/bin/${PLATFORM}${SDKVERSION}-${ARCH}.sdk/build-cyrus-sasl-${VERSION}.log"
+echo "CC = ${CC}"
+echo "CFLAGS = ${CFLAGS}"
 
 echo "Configure cyrus-sasl for ${PLATFORM} ${SDKVERSION} ${ARCH}"
 
 export CC="${CC}"
 export CFLAGS="${CFLAGS}"
 #export LDFLAGS="${LDFLAGS}"
-./configure -prefix=${CURRENTPATH}/bin/${PLATFORM}${SDKVERSION}-${ARCH}.sdk --host=${ARCH}-apple-darwin --disable-shared --enable-static --with-openssl > "${LOG}" 2>&1
+./configure -prefix=${CURRENTPATH}/bin/${PLATFORM}${SDKVERSION}.sdk --host=${ARCH}-apple-darwin --disable-shared --enable-static --with-openssl
 
 echo "Make cyrus-sasl for ${PLATFORM} ${SDKVERSION} ${ARCH}"
 
-(cd lib && make) >> "${LOG}" 2>&1
-(cd include && make saslinclude_HEADERS="hmac-md5.h md5.h sasl.h saslplug.h saslutil.h prop.h" install) >> "${LOG}" 2>&1
-(cd include && make clean) >> "${LOG}" 2>&1
-(cd lib && make install) >> "${LOG}" 2>&1
-(cd lib && make clean) >> "${LOG}" 2>&1
+(cd lib && make)
+(cd include && make saslinclude_HEADERS="hmac-md5.h md5.h sasl.h saslplug.h saslutil.h prop.h" install)
+(cd include && make clean)
+(cd lib && make install)
+(cd lib && make clean)
 rm config.cache
 popd
 
@@ -134,8 +101,8 @@ echo "Please stand by..."
 
 pushd "${CURRENTPATH}/src/cyrus-sasl-${VERSION}"
 
-CC="${DEVELOPER}/Platforms/${PLATFORM}.platform/Developer/usr/bin/gcc"
-CFLAGS="-isysroot ${DEVELOPER}/Platforms/${PLATFORM}.platform/Developer/SDKs/${PLATFORM}${SDKVERSION}.sdk -I"${OPENSSL}/include" -L"${OPENSSL}" -arch ${ARCH} -pipe -Os -gdwarf-2"
+CC="${DEVELOPER}/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang"
+CFLAGS="-isysroot ${DEVELOPER}/Platforms/${PLATFORM}.platform/Developer/SDKs/${PLATFORM}${SDKVERSION}.sdk -I"${OPENSSL}/include" -L"${OPENSSL}" -arch ${ARCH} -pipe -Os -gdwarf-2 -miphoneos-version-min=${SDKVERSION}"
 #LDFLAGS="-isysroot ${DEVELOPER}/Platforms/${PLATFORM}.platform/Developer/SDKs/${PLATFORM}${SDKVERSION}.sdk -arch ${ARCH}"
 mkdir -p "${CURRENTPATH}/bin/${PLATFORM}${SDKVERSION}-${ARCH}.sdk"
 
@@ -146,15 +113,51 @@ echo "Configure cyrus-sasl for ${PLATFORM} ${SDKVERSION} ${ARCH}"
 export CC="${CC}"
 export CFLAGS="${CFLAGS}"
 #export LDFLAGS="${LDFLAGS}"
-./configure -prefix=${CURRENTPATH}/bin/${PLATFORM}${SDKVERSION}-${ARCH}.sdk --host=${ARCH}-apple-darwin --disable-shared --enable-static --with-opnessl > "${LOG}" 2>&1
+./configure -prefix=${CURRENTPATH}/bin/${PLATFORM}${SDKVERSION}-${ARCH}.sdk --host=${ARCH}-apple-darwin --disable-shared --enable-static --with-opnessl
 
 echo "Make cyrus-sasl for ${PLATFORM} ${SDKVERSION} ${ARCH}"
 
-(cd lib && make) >> "${LOG}" 2>&1
-(cd include && make saslinclude_HEADERS="hmac-md5.h md5.h sasl.h saslplug.h saslutil.h prop.h" install) >> "${LOG}" 2>&1
-(cd include && make clean) >> "${LOG}" 2>&1
-(cd lib && make install) >> "${LOG}" 2>&1
-(cd lib && make clean) >> "${LOG}" 2>&1
+(cd lib && make)
+(cd include && make saslinclude_HEADERS="hmac-md5.h md5.h sasl.h saslplug.h saslutil.h prop.h" install)
+(cd include && make clean)
+(cd lib && make install)
+(cd lib && make clean)
+rm config.cache
+popd
+
+echo "Building cyrus-sasl for ${PLATFORM} ${SDKVERSION} ${ARCH}, finished"
+#############
+
+#############
+# iPhoneOS armv7s
+ARCH="armv7s"
+PLATFORM="iPhoneOS"
+echo "Building cyrus-sasl for ${PLATFORM} ${SDKVERSION} ${ARCH}"
+echo "Please stand by..."
+
+pushd "${CURRENTPATH}/src/cyrus-sasl-${VERSION}"
+
+CC="${DEVELOPER}/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang"
+CFLAGS="-isysroot ${DEVELOPER}/Platforms/${PLATFORM}.platform/Developer/SDKs/${PLATFORM}${SDKVERSION}.sdk -I"${OPENSSL}/include" -L"${OPENSSL}" -arch ${ARCH} -pipe -Os -gdwarf-2 -miphoneos-version-min=${SDKVERSION}"
+#LDFLAGS="-isysroot ${DEVELOPER}/Platforms/${PLATFORM}.platform/Developer/SDKs/${PLATFORM}${SDKVERSION}.sdk -arch ${ARCH}"
+mkdir -p "${CURRENTPATH}/bin/${PLATFORM}${SDKVERSION}-${ARCH}.sdk"
+
+LOG="${CURRENTPATH}/bin/${PLATFORM}${SDKVERSION}-${ARCH}.sdk/build-cyrus-sasl-${VERSION}.log"
+
+echo "Configure cyrus-sasl for ${PLATFORM} ${SDKVERSION} ${ARCH}"
+
+export CC="${CC}"
+export CFLAGS="${CFLAGS}"
+#export LDFLAGS="${LDFLAGS}"
+./configure -prefix=${CURRENTPATH}/bin/${PLATFORM}${SDKVERSION}-${ARCH}.sdk --host=${ARCH}-apple-darwin --disable-shared --enable-static --with-openssl
+
+echo "Make cyrus-sasl for ${PLATFORM} ${SDKVERSION} ${ARCH}"
+
+(cd lib && make)
+(cd include && make saslinclude_HEADERS="hmac-md5.h md5.h sasl.h saslplug.h saslutil.h prop.h" install)
+(cd include && make clean)
+(cd lib && make install)
+(cd lib && make clean)
 rm config.cache
 popd
 
@@ -165,7 +168,7 @@ echo "Building cyrus-sasl for ${PLATFORM} ${SDKVERSION} ${ARCH}, finished"
 # Universal Library
 echo "Build universal library..."
 
-lipo -create ${CURRENTPATH}/bin/iPhoneSimulator${SDKVERSION}.sdk/lib/libsasl2.a ${CURRENTPATH}/bin/iPhoneOS${SDKVERSION}-armv6.sdk/lib/libsasl2.a ${CURRENTPATH}/bin/iPhoneOS${SDKVERSION}-armv7.sdk/lib/libsasl2.a -output ${CURRENTPATH}/libsasl2.a
+lipo -create ${CURRENTPATH}/bin/iPhoneSimulator${SDKVERSION}.sdk/lib/libsasl2.a ${CURRENTPATH}/bin/iPhoneOS${SDKVERSION}-armv7s.sdk/lib/libsasl2.a ${CURRENTPATH}/bin/iPhoneOS${SDKVERSION}-armv7.sdk/lib/libsasl2.a -output ${CURRENTPATH}/libsasl2.a
 
 mkdir -p ${CURRENTPATH}/include
 cp -R ${CURRENTPATH}/bin/iPhoneSimulator${SDKVERSION}.sdk/include/sasl ${CURRENTPATH}/include/
