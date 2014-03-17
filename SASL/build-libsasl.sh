@@ -22,7 +22,7 @@
 #  Change values here							  #
 #									  #
 VERSION="2.1.25"							  #
-SDKVERSION="7.0"							  #
+SDKVERSION="7.1"							  #
 OPENSSL="${PWD}/../OpenSSL"						  #
 #									  #
 ###########################################################################
